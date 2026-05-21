@@ -4,6 +4,72 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SimplyBudget Dashboard</title>
+    </head>
+<body>
+
+<div id="identityModal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(11, 12, 22, 0.95); display: none; justify-content: center; align-items: center; z-index: 99999;">
+    <div style="background: #1e293b; padding: 30px; border-radius: 20px; text-align: center; max-width: 300px; border: 1px solid #3b82f6;">
+        <h3 style="margin-bottom: 20px;">Who is using this device?</h3>
+        <button onclick="saveIdentity('Person 1')" style="width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 10px; background: #3b82f6; border: none; color: white; cursor: pointer;">I am Person 1</button>
+        <button onclick="saveIdentity('Person 2')" style="width: 100%; padding: 12px; border-radius: 10px; background: #6366f1; border: none; color: white; cursor: pointer;">I am Person 2</button>
+    </div>
+</div>
+
+<script>
+    // 1. Data Initialization
+    let ledger = JSON.parse(localStorage.getItem('jointBudgetLedger')) || [];
+    let configNames = JSON.parse(localStorage.getItem('budgetNamesConfig')) || { p1: "Dylan", p2: "Partner" };
+
+    // 2. Identity Logic
+    function initIdentity() {
+        // If no identity is set on this device, show the modal
+        if (!localStorage.getItem('myIdentity')) {
+            document.getElementById('identityModal').style.display = 'flex';
+        }
+    }
+
+    function saveIdentity(name) {
+        localStorage.setItem('myIdentity', name);
+        document.getElementById('identityModal').style.display = 'none';
+    }
+
+    // 3. Existing Budget Logic (handleNameChange, saveEntry, updateDashboard, etc.)
+    function handleNameChange() {
+        configNames.p1 = document.getElementById('namePerson1').value.trim() || "Person 1";
+        configNames.p2 = document.getElementById('namePerson2').value.trim() || "Person 2";
+        localStorage.setItem('budgetNamesConfig', JSON.stringify(configNames));
+        
+        // Update your UI components as per your original logic
+        updateDashboard();
+    }
+
+    function saveEntry() {
+        // ... (Your original saveEntry logic)
+        localStorage.setItem('jointBudgetLedger', JSON.stringify(ledger));
+        updateDashboard();
+    }
+
+    function updateDashboard() {
+        // ... (Your original updateDashboard logic)
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', () => {
+        // Pre-fill names
+        document.getElementById('namePerson1').value = configNames.p1;
+        document.getElementById('namePerson2').value = configNames.p2;
+        
+        initIdentity();
+        updateDashboard();
+    });
+</script>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SimplyBudget Dashboard</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
     
     <style>
@@ -959,7 +1025,42 @@
         handleNameChange();
         handleTypeChange();
     };
+	
+	
+	
+	
+	
+	// --- Device Identity Logic ---
+function initDeviceIdentity() {
+    // Check if this device has been set up
+    const currentIdentity = localStorage.getItem('deviceIdentity');
+    if (!currentIdentity) {
+        document.getElementById('deviceModal').style.display = 'flex';
+    }
+}
+
+function setDeviceIdentity(identity) {
+    localStorage.setItem('deviceIdentity', identity);
+    document.getElementById('deviceModal').style.display = 'none';
+    // Optional: Auto-focus the respective input field
+    const nameInput = identity === 'p1' ? 'namePerson1' : 'namePerson2';
+    document.getElementById(nameInput).focus();
+}
+
+// Call this immediately
+initDeviceIdentity();
+	
 </script>
+
+
+<div id="deviceModal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(11, 12, 22, 0.95); display: none; justify-content: center; align-items: center; z-index: 99999; padding: 20px;">
+    <div style="background: #1e293b; padding: 30px; border-radius: 20px; text-align: center; max-width: 300px; border: 1px solid #3b82f6;">
+        <h3 style="color: #fff; margin-bottom: 20px;">Who is using this device?</h3>
+        <button onclick="setDeviceIdentity('p1')" style="width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 10px; background: #3b82f6; border: none; color: white; cursor: pointer;">I am Person 1</button>
+        <button onclick="setDeviceIdentity('p2')" style="width: 100%; padding: 12px; border-radius: 10px; background: #6366f1; border: none; color: white; cursor: pointer;">I am Person 2</button>
+    </div>
+</div>
+
 
 </body>
 </html>
